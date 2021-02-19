@@ -14,7 +14,7 @@ public class App extends JFrame{
 	    
 	    add(panel);
 	    
-	    thread = new AppThread();
+	    thread = new MyThread();
 	    
 	    dialog.setTitle("점수");
 	    dialog.setSize(250, 190);
@@ -35,6 +35,18 @@ public class App extends JFrame{
 	        }
 	    });
 	    
+	    button.addActionListener(new ActionListener(){
+	         public void actionPerformed(ActionEvent e){
+	            panel.limit = false;
+	            for(int y=0; y<19;y++)
+	               for(int x=1; x<12; x++)
+	                  panel.gameBoard[y][x] =0 ;
+	            panel.score = 0;
+	            panel.width = 100; 
+	            panel.height = 0;
+	        }
+	    });
+	    
 	    panel.setBackground(Color.WHITE);
 	    setSize(530,520);
 	    setVisible(true);
@@ -49,10 +61,25 @@ public class App extends JFrame{
 	    thread.start();
 	}
 	
+	class MyThread extends Thread{
+		public void run() {
+			while(true) {
+				try {
+					sleep(500);
+					if(panel.limit == false)
+						panel.down();
+				}catch(InterruptedException e) {
+					return;
+				}
+			}
+		}
+	}
+	
 	Container c = getContentPane();
 	MyPanel panel = new MyPanel();
 	JDialog dialog = new JDialog();
-	AppThread thread;
+	MyThread thread;
+	JButton button = new JButton("재도전");
 
 	public static void main(String[] args) {
 		new App();
